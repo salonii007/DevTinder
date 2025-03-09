@@ -1,7 +1,7 @@
 const mongoose= require("mongoose"); //after installing mongoose becoz not part of npm 
 const connectDB = async()=> {
   try{
-    await mongoose.connect("mongodb+srv://saloni007:saloni@DB26@nodejs.76dl4.mongodb.net/?retryWrites=true&w=majority&appName=Nodejs"); //ye string mongodb cluster se aayi he!
+    await mongoose.connect("mongodb+srv://saloni007:salonii@nodejs.76dl4.mongodb.net/?retryWrites=true&w=majority&appName=Nodejs"); //ye string mongodb cluster se aayi he!
 
     console.log("DB connected successfully"); //happy case
   }

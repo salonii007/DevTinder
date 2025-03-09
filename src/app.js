@@ -1,19 +1,16 @@
 const express= require("express"); //referencing to the code of express from the node modules
 const connectDB = require("./config/database");
 const User= require("./models/User");
-// const req = require("express/lib/request");
 
 const app= express(); //we called the express fucntion in a way creating an express application 
 
+app.use(express.json()); //middleware tht converts the JSON wali api coming request to JS OBJECT
+
 app.post("/signup", async(req,res)=>{
-    const user= new User({
-        firstname:"Prateek",
-        lastname:"Bhandari",
-        age:21,
-        hobbies:["Datna","coding"],
-    });
+    const user= new User(req.body);
+    console.log(req.body);
     await user.save();
-    res.send("hardcoded data saved");
+    res.send("API WALA DATA IN DB");
 });
 
 
