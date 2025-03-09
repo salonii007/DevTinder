@@ -1,11 +1,22 @@
 const express= require("express"); //referencing to the code of express from the node modules
 const connectDB = require("./config/database");
+const User= require("./models/User");
+// const req = require("express/lib/request");
 
 const app= express(); //we called the express fucntion in a way creating an express application 
 
-connectDB().then(()=>{
-    console.log("connected DB");
-})
+app.post("/signup", async(req,res)=>{
+    const user= new User({
+        firstname:"Prateek",
+        lastname:"Bhandari",
+        age:21,
+        hobbies:["Datna","coding"],
+    });
+    await user.save();
+    res.send("hardcoded data saved");
+});
+
+
 app.use("/test",(req, res)=>{  //app.use to handle any incoming request. the arroe functon with parameters req, and res is a request handler function ka arrow function
 
     res.send("Hello! test")
