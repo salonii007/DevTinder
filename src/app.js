@@ -11,6 +11,17 @@ app.post("/signup", async(req,res)=>{
     console.log(req.body);
     await user.save();
     res.send("API WALA DATA IN DB");
+})
+
+
+app.get("/user", async(req,res)=>{   //using get api to get data from db in response
+    const email= req.body.email; //jo api req body me email he! vo wali entry
+    try{
+    const user= await User.find({email : email});  //Model.method({filter})
+    res.send(user);
+    }catch(err){
+        res.status(400).send("something went wrong");
+    }
 });
 
 
