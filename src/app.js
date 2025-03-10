@@ -38,6 +38,21 @@ app.patch("/user", async (req, res)=>{
     }
 })
 
+app.delete("/user", async(req, res)=>{
+    const userid= req.body.userid;
+    try{
+        const user= await User.findByIdAndDelete({_id:userid});
+        if(user.length===0)
+        {
+            res.send("user not found");
+        }
+        res.send("deleted entry")
+    }catch(err)
+    {
+        res.status(400).send("something went wrong");
+    }
+})
+
 app.use("/test",(req, res)=>{  //app.use to handle any incoming request. the arroe functon with parameters req, and res is a request handler function ka arrow function
 
     res.send("Hello! test")
