@@ -18,12 +18,25 @@ app.get("/user", async(req,res)=>{   //using get api to get data from db in resp
     const email= req.body.email; //jo api req body me email he! vo wali entry
     try{
     const user= await User.find({email : email});  //Model.method({filter})
+    if(user.length===0)
+        res.send("user not found");
+    else
     res.send(user);
     }catch(err){
         res.status(400).send("something went wrong");
     }
 });
 
+app.patch("/user", async (req, res)=>{
+    const userid = req.body.userid;
+    const data= req.body;
+    try{
+        const user= await User.findByIdAndUpdate({_id:userid}, data);
+        res.send("data updated using patch");
+    }catch(err){
+        res.status(400).send("something went wrong");
+    }
+})
 
 app.use("/test",(req, res)=>{  //app.use to handle any incoming request. the arroe functon with parameters req, and res is a request handler function ka arrow function
 
