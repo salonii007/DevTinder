@@ -18,18 +18,36 @@ app.post("/signup", async(req,res)=>{
                                                              //10-- salt rounds  
             
          const user= new User({...req.body, password : passhash}); //pehle modify passwaord value to passhash then create user instance
-
-        
-           await user.save();
+          await user.save();
            res.send("API WALA DATA IN DB with validations from custom validate funtion");
         }
     }
     catch(err){
         res.status(400).send("Sorryyyy :" + err);
     }
- 
 })
+app.post("/login", async(req,res)=>{
+    try{
+    const {email, password}= req.body;
+    //cheking if email is valid
 
+    const user= await User.findOne({email:email});
+    if(!user)
+    {
+        throw new Error("Invalid Credentials");
+    }
+    const ispassCorrect  = await bcrypt.compare(password, user.password);
+    if(ispassCorrect)
+    {
+        res.send("Login succcessfullyyyyy!!")
+    }
+    else{
+        throw new Error("Invalid Credentials");
+    }}
+    catch(err){
+        res.status(400).send("Sorryyyy :" + err);
+    }
+})
 
 app.get("/user", async(req,res)=>{   //using get api to get data from db in response
     const email= req.body.email; //jo api req body me email he! vo wali entry
