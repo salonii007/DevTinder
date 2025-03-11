@@ -3,10 +3,17 @@ const connectDB = require("./config/database");
 const User= require("./models/User");
 const validatesignupdata= require("./utils/validation");  //for validation!
 const bcrypt= require("bcrypt"); //npm pacakge for encryption of password!
+const cookieParser = require("cookie-parser");
+const jwt= require("jsonwebtoken");
+const userAuth= require("./utils/Userauthentiction")
+
 
 const app= express(); //we called the express fucntion in a way creating an express application 
 
+
 app.use(express.json()); //middleware tht converts the JSON wali api coming request to JS OBJECT
+
+app.use(cookieParser()); //now whenever req comes back! we will pehle read the cookies
 
 app.post("/signup", async(req,res)=>{
     try{
@@ -39,6 +46,9 @@ app.post("/login", async(req,res)=>{
     const ispassCorrect  = await bcrypt.compare(password, user.password);
     if(ispassCorrect)
     {
+        //lets make cookiess!
+        const token= await jwt.sign({_id:user._id}, "SECRET@KEY", {expiresIn: '3d' });
+        res.cookie("token", token, {httpOnly: true}) // Prevents XSS attacks);
         res.send("Login succcessfullyyyyy!!")
     }
     else{
@@ -49,14 +59,11 @@ app.post("/login", async(req,res)=>{
     }
 })
 
-app.get("/user", async(req,res)=>{   //using get api to get data from db in response
-    const email= req.body.email; //jo api req body me email he! vo wali entry
+app.get("/user", userAuth, async(req,res)=>{   //using get api to get data from db in response
+    
     try{
-    const user= await User.find({email : email});  //Model.method({filter})
-    if(user.length===0)
-        res.send("user not found");
-    else
-    res.send(user);
+    
+    res.send(req.user);
     }catch(err){
         res.status(400).send("something went wrong");
     }
