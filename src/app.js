@@ -2,6 +2,7 @@ const express= require("express"); //referencing to the code of express from the
 const connectDB = require("./config/database");
 const User= require("./models/User");
 const validatesignupdata= require("./utils/validation");  //for validation!
+const bcrypt= require("bcrypt"); //npm pacakge for encryption of password!
 
 const app= express(); //we called the express fucntion in a way creating an express application 
 
@@ -10,8 +11,15 @@ app.use(express.json()); //middleware tht converts the JSON wali api coming requ
 app.post("/signup", async(req,res)=>{
     try{
         if(validatesignupdata(req)){
-         const user= new User(req.body);
-          console.log(req.body);
+            const password=req.body.password;
+
+            const passhash= await bcrypt.hash(password, 10); //await--becoz returns promise
+                                                             //bcrypt.hash-- method to encrypt password
+                                                             //10-- salt rounds  
+            
+         const user= new User({...req.body, password : passhash}); //pehle modify passwaord value to passhash then create user instance
+
+        
            await user.save();
            res.send("API WALA DATA IN DB with validations from custom validate funtion");
         }
