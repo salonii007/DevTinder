@@ -1,16 +1,25 @@
 const express= require("express"); //referencing to the code of express from the node modules
 const connectDB = require("./config/database");
 const User= require("./models/User");
+const validatesignupdata= require("./utils/validation");  //for validation!
 
 const app= express(); //we called the express fucntion in a way creating an express application 
 
 app.use(express.json()); //middleware tht converts the JSON wali api coming request to JS OBJECT
 
 app.post("/signup", async(req,res)=>{
-    const user= new User(req.body);
-    console.log(req.body);
-    await user.save();
-    res.send("API WALA DATA IN DB");
+    try{
+        if(validatesignupdata(req)){
+         const user= new User(req.body);
+          console.log(req.body);
+           await user.save();
+           res.send("API WALA DATA IN DB with validations from custom validate funtion");
+        }
+    }
+    catch(err){
+        res.status(400).send("Sorryyyy :" + err);
+    }
+ 
 })
 
 
@@ -28,16 +37,23 @@ app.get("/user", async(req,res)=>{   //using get api to get data from db in resp
 });
 
 app.patch("/user", async (req, res)=>{
-    const userid = req.body.userid;
-    const data= req.body;
     try{
-        const user= await User.findByIdAndUpdate({_id:userid}, data);
+    const data=req.body;
+    const _id=data._id;
+    const Allowed_Updates=[ "_id", "photo", "instagram", "age", "hobbies", "gender","about", "phone"];
+    const isUpdate = Object.keys(data).every((k)=> Allowed_Updates.includes(k));
+    if(!isUpdate){
+    res.status(400).send("update not allowed");
+    }
+    
+        const user= await User.findByIdAndUpdate({_id}, data, { runValidators: true }); //runvalidator-- for using validations on apis updates
         res.send("data updated using patch");
     }catch(err){
+        console.log(err);
         res.status(400).send("something went wrong");
     }
 })
-
+ 
 app.delete("/user", async(req, res)=>{
     const userid= req.body.userid;
     try{

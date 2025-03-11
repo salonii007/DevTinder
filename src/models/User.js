@@ -15,6 +15,9 @@ const userSchema= new mongoose.Schema(
             description: "lastname' must be a string and is required",
             minlength:3
         },
+        about:{
+            type: String
+        },
         email: {
             type: String,
             required: true,
