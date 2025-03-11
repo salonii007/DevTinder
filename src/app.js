@@ -43,12 +43,14 @@ app.post("/login", async(req,res)=>{
     {
         throw new Error("Invalid Credentials");
     }
-    const ispassCorrect  = await bcrypt.compare(password, user.password);
+    // const ispassCorrect  = await bcrypt.compare(password, user.password); //instead using schema methods
+     const ispassCorrect= await user.validatePassword(password);
     if(ispassCorrect)
     {
         //lets make cookiess!
-        const token= await jwt.sign({_id:user._id}, "SECRET@KEY", {expiresIn: '3d' });
-        res.cookie("token", token, {httpOnly: true}) // Prevents XSS attacks);
+        // const token= await jwt.sign({_id:user._id}, "SECRET@KEY", {expiresIn: '3d' }); //instead use form the schemamethods
+        const token= await user.getJWT();
+        res.cookie("token", token, {httpOnly: true}) // Prevents XSS attacks-- will worn on htt server only);
         res.send("Login succcessfullyyyyy!!")
     }
     else{

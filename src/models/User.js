@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const validator= require("validator");
+const jwt= require("jsonwebtoken");
+const bcrypt= require("bcrypt");
 
 const userSchema= new mongoose.Schema(
     {
@@ -87,6 +89,21 @@ const userSchema= new mongoose.Schema(
         }
     }
 ) //method for schema creation
+
+userSchema.methods.getJWT= async function(){
+    const user= this; //reffering to the current instance
+    
+    const token= jwt.sign({_id: user._id}, "SECRET@KEY", {expiresIn :'7d'});
+    return token;
+}
+
+userSchema.methods.validatePassword= async function(passwordbyuser){
+    const user= this;
+
+    const isvalid= await bcrypt.compare(passwordbyuser, this.password);
+    return isvalid;
+
+}
 
 const User= mongoose.model("User", userSchema); //with this model we create new instances & put in db
 
