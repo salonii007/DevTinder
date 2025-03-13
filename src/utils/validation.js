@@ -42,4 +42,14 @@ const validatesignupdata= (req)=>{
     return true;
 
 }
-module.exports=validatesignupdata;
+
+const validateEditdata = async(req)=>{
+        const data=req.body;
+        const AllowedUpdates=[ "photo", "instagram", "age", "hobbies", "gender","about", "phone"];
+        const isUpdate = Object.keys(data).every((k)=> AllowedUpdates.includes(k));
+        
+        return isUpdate;
+        
+}
+
+module.exports={validatesignupdata, validateEditdata};
