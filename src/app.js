@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser");
 // const userAuth= require("./utils/Userauthentiction")
 const authRouter=require("./routes/authRouter");
 const profileRouter=require("./routes/profileRouter");
-
+const requestRouter=require("./routes/requestRouter");
 
 
 const app= express(); //we called the express fucntion in a way creating an express application 
@@ -20,6 +20,7 @@ app.use(cookieParser()); //now whenever req comes back! we will pehle read the c
 
 app.use("/",authRouter);
 app.use("/", profileRouter);
+app.use("/",requestRouter);
 
 
  app.use("/",(err, req, res, next)=>{     //ALWAYSSSS at the end to to handle any unexpected error gracefully without leaking any info

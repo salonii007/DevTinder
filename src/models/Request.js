@@ -10,8 +10,8 @@ const requestSchema=new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     required:true
   },
-  Status:{
-    type:Status,
+  status:{
+    type: String,
     required: true,
     enum: {                        //instead of validate funtion in gender and all this! enum <3
         values:["ignored","interested","rejected","accepted"],
@@ -22,6 +22,16 @@ const requestSchema=new mongoose.Schema({
   {timestamps:true}
 )
 
+requestSchema.pre("save", function(next){ //similar to scheme methods! schema pre will be called always before saving data in db
+
+  const connrequest= this;
+  if(connrequest.fromUserId.equals(connrequest.toUserId))
+  {
+    throw new Error("You cant send request to yourself");
+  }
+  next();//cuz it is kinda middleware 
+
+})
 const Request= mongoose.model("Request", requestSchema); //with this model we create new instances & put in db
 
 module.exports= Request;  //exporting it to import request model to make instances in the main file
