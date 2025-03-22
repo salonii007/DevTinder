@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const requestSchema=new mongoose.Schema({
   fromUserId:{
     type:mongoose.Schema.ObjectId,// for the object ids tht mongo gives by itself
+    ref: "User", // for making it as the foreign key or connecting field in User db and request db
     required:true
   }  ,
   toUserId:{

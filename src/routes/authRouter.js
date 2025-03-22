@@ -4,7 +4,7 @@
  const authRouter= express.Router();
  const User= require("../models/User");
  const bcrypt=require("bcrypt");
- const validatesignupdata=require("../utils/validation");
+ const {validatesignupdata} =require("../utils/validation");
  
 
  authRouter.post("/signup", async(req,res)=>{
