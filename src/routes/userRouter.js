@@ -4,6 +4,7 @@ const userRouter= express.Router();
 const userAuth= require("../utils/Userauthentiction");
 const Request= require("../models/Request");
 
+const USER_SAFE_DATA= "firstname lastname instagram age gender";
 
 userRouter.get("/user/requests", userAuth, async(req,res)=>{
     try{
@@ -36,11 +37,20 @@ userRouter.get("/user/connections", userAuth, async(req,res)=>{
         status:"accepted"},
         {fromUserId: loggedinUser._id,
             status:"accepted"}
-    ]}).populate("fromUserId", "firstname lastname instagram age gender ");
+    ]}).populate("fromUserId", "firstname lastname instagram age gender ")
+    .populate("toUserId","firstname lastname instagram age gender " );
+
+    const data= connections.map((row)=>
+        {
+            if(row.fromUserId.toString()===loggedinUser._id.toString())
+                return row.toUserId;
+            else
+           return row.fromUserId;
+        });
 
     res.json({
         message:"all connections",
-        data: connections
+        data: data
     });
     }
     catch(err)
