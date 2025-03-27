@@ -20,7 +20,7 @@ app.use(express.json()); //middleware tht converts the JSON wali api coming requ
 app.use(cookieParser()); //now whenever req comes back! we will pehle read the cookies
 app.use (cors(   //cors options
     {
-        origin :"http://localhost:5173/login",  //backend must know where the frontend is hosted
+        origin :"http://localhost:5173",  //backend must know where the frontend is hosted
         credentials:true,   
     }
 )); //to handle the cors error! when we trying to access from a different origin

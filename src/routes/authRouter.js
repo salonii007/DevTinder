@@ -17,8 +17,12 @@
                                                              //10-- salt rounds  
             
          const user= new User({...req.body, password : passhash}); //pehle modify passwaord value to passhash then create user instance
-          await user.save();
-           res.send("API WALA DATA IN DB with validations from custom validate funtion");
+         const saveduser= await user.save();  //to set cookies on dignup also
+         const token= await saveduser.getJWT();
+         res.cookie("token", token, {httpOnly: true}) // Prevents XSS attacks-- will worn on htt server only);
+        
+
+           res.json({ message: "user added successfully!", data: saveduser} );
         }
     }
     catch(err){
@@ -44,7 +48,7 @@ authRouter.post("/login", async(req,res)=>{
         // const token= await jwt.sign({_id:user._id}, "SECRET@KEY", {expiresIn: '3d' }); //instead use form the schemamethods
         const token= await user.getJWT();
         res.cookie("token", token, {httpOnly: true}) // Prevents XSS attacks-- will worn on htt server only);
-        res.send("Login succcessfullyyyyy!!")
+        res.send(user)
     }
     else{
         throw new Error("Invalid Credentials");

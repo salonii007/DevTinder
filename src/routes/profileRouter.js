@@ -7,9 +7,8 @@ const profileRouter= express.Router();
 const {validateEditdata}=require("../utils/validation")
 
 
-profileRouter.get("/profile", userAuth, async(req,res)=>{   //using get api to get data from db in response
+profileRouter.get("/profile/view", userAuth, async(req,res)=>{   //using get api to get data from db in response
     try{
-    
     res.send(req.user);
     }catch(err){
         res.status(400).send("something went wrong");
